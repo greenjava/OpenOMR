@@ -52,6 +52,7 @@ public class ToolBar extends JPanel
 	private RecognitionAction recognitionAction;
 	private FFTAction fftAction;
 	private PlayAction playAction;
+	private SaveAction saveAction;
 	private JDialog recogDialog;
 	private OpenAction openAction;
 	
@@ -70,11 +71,13 @@ public class ToolBar extends JPanel
 		recognitionAction = new RecognitionAction("Right", new ImageIcon("icons/GreenFlag.png"), "Perform Recognition", 'R');
 		fftAction = new FFTAction("Center", new ImageIcon("icons/Fft.png"), "Do FFT", 'C');
 		playAction = new PlayAction("Right", new ImageIcon("icons/Play.png"), "Play Recognized Score", 'R');
+		saveAction = new SaveAction("Right", new ImageIcon("icons/save.png"), "Save Recognized Score", 'S');
 		openAction = new OpenAction("Left", new ImageIcon("icons/Open.png"), "Open File", 'L');
 		toolbar.add(openAction);
 		toolbar.add(fftAction);
 		toolbar.add(recognitionAction);
 		toolbar.add(playAction);
+		toolbar.add(saveAction);
 		box.add(toolbar);
 		box.add(Box.createHorizontalGlue());
 		
@@ -125,6 +128,39 @@ public class ToolBar extends JPanel
 			gui.FileOpenAction();
 		}
 	}
+
+	private class SaveAction extends AbstractAction
+	{
+		public SaveAction(String text, Icon icon, String description, char accelerator)
+		{
+			super(text, icon);
+			setEnabled(false);
+			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(accelerator, java.awt.Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
+			putValue(SHORT_DESCRIPTION, description);
+		}
+
+		public void actionPerformed(ActionEvent arg0)
+		{
+			ScoreGenerator scoreGen = null;
+			try
+			{
+				StaveDetection staveDetection = gui.getStaveDetection();
+				LinkedList<Staves> staveList = staveDetection.getStaveList();
+				scoreGen = new ScoreGenerator(staveList);
+				scoreGen.makeSong(64);
+				scoreGen.save();
+			} 
+			catch (MidiUnavailableException e)
+			{
+				e.printStackTrace();
+			} 
+			catch (InvalidMidiDataException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
 
 	private class PlayAction extends AbstractAction
 	{
@@ -196,6 +232,11 @@ public class ToolBar extends JPanel
 	public void setPlayEnbabled(boolean val)
 	{
 		playAction.setEnabled(val);
+	}
+	
+	public void setSaveEnbabled(boolean val)
+	{
+		saveAction.setEnabled(val);
 	}
 	
 	public void setOpenEnabled(boolean val)

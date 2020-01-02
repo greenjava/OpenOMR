@@ -8,8 +8,28 @@
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
 <project name="OpenOMR" default="default" basedir=".">
-    <description>Builds, tests, and runs the project OpenOMR.</description>
-    <import file="nbproject/build-impl.xml"/>
+   <description>Builds, tests, and runs the project OpenOMR.</description>
+   <import file="nbproject/build-impl.xml"/>
+   <target name="-post-jar">
+      <copy todir="${dist.dir}">
+          <fileset dir=".">
+	      <include name="icons/*"/>
+              <include name="neuralnetwork/**"/>
+	      <include name="testImages/*"/>
+	      <include name="lib/*.jar"/>
+	  </fileset>
+      </copy>
+   </target>
+   <!--
+   <target name="-post-jar">
+      <jar update="yes"  jarfile="${dist.jar}">
+         <zipfileset src="lib/jcommon-1.0.23.jar" includes="**"/>
+	 <zipfileset src="lib/jfreechart-1.0.19.jar" includes="**"/>
+	 <zipfileset src="lib/joone-engine.jar" includes="**"/>
+      </jar>
+   </target>
+   -->
+
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -34,7 +54,7 @@
 
     Example of inserting an obfuscator after compilation could look like this:
 
-        <target name="-post-compile">
+        <target name="-post-jar">
             <obfuscate>
                 <fileset dir="${build.classes.dir}"/>
             </obfuscate>
@@ -70,4 +90,4 @@
     nbproject/build-impl.xml file. 
 
     -->
-</project>
+ </project>

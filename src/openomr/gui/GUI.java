@@ -1196,6 +1196,7 @@ public class GUI extends JFrame
 		symbolItem.setEnabled(val);
 		staveProjItem.setEnabled(val);
 		toolBar.setPlayEnbabled(true);
+		toolBar.setSaveEnbabled(true);
 	}
 
 	public void setBoundaryImage(BufferedImage dupImage)
