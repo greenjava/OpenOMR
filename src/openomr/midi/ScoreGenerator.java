@@ -65,4 +65,5 @@ public class ScoreGenerator extends MidiFileGenerator
 			//System.out.println("End Stave");
 		}
 	}   
+
 }

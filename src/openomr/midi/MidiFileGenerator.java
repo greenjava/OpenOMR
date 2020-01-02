@@ -23,6 +23,7 @@
 
 package openomr.midi;
 
+import java.io.File;
 import javax.sound.midi.*;
 
 /**
@@ -32,6 +33,7 @@ import javax.sound.midi.*;
 public abstract class MidiFileGenerator
 {
 	private final Sequencer sequencer;
+	private final Sequence sequence;
 	private final Track track;
 	private final int resolution;
 	private int pos;
@@ -45,9 +47,8 @@ public abstract class MidiFileGenerator
 	public MidiFileGenerator(int key, int tempo, int resolution) throws MidiUnavailableException, InvalidMidiDataException
 	{
 		this.resolution = resolution;
-		Sequence sequence = new Sequence(Sequence.PPQ, resolution);
+		this.sequence = new Sequence(Sequence.PPQ, resolution);
 		track = sequence.createTrack();
-		//makeSong(key);
 		sequencer = MidiSystem.getSequencer();
 		sequencer.open();
 		sequencer.setSequence(sequence);
@@ -59,7 +60,23 @@ public abstract class MidiFileGenerator
 		sequencer.start();
 	}
 
-	//protected abstract void makeSong(int key) throws InvalidMidiDataException;
+	public void save()
+	{
+
+		try{
+			File midifile = new File("generated.mid");
+                        if (sequence != null){
+				MidiSystem.write(sequence,1,midifile);
+				System.out.println("File written: [generated.mid]");
+			}else{
+				System.out.println("null midi sequence found");
+			}
+	        }
+
+		catch(Exception e){
+			System.out.println("Exception caught " + e.toString());
+	        }
+	}
 
 	protected void add(int note) throws InvalidMidiDataException
 	{
